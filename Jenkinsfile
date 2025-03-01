@@ -1,5 +1,3 @@
-groovy
-CopyEdit
 pipeline {
     agent none
 
@@ -31,12 +29,12 @@ pipeline {
         stage('Push Docker Image to Docker Hub') {
             agent { label 'master' }
             environment {
-                DOCKER_USER = credentials('dockerhub-credentials') // Set in Jenkins credentials
+                DOCKER_CREDENTIALS = credentials('dockerhub-credentials')  // Use saved Jenkins credentials
             }
             steps {
-                sh 'docker login -u $DOCKER_USER -p $DOCKER_PASSWORD'
-                sh 'docker tag mynodeapp YOUR_DOCKERHUB_USERNAME/mynodeapp:latest'
-                sh 'docker push YOUR_DOCKERHUB_USERNAME/mynodeapp:latest'
+                sh 'echo "$DOCKER_CREDENTIALS_PSW" | docker login -u "$DOCKER_CREDENTIALS_USR" --password-stdin'
+                sh 'docker tag mynodeapp $DOCKER_CREDENTIALS_USR/mynodeapp:latest'
+                sh 'docker push $DOCKER_CREDENTIALS_USR/mynodeapp:latest'
             }
         }
 
@@ -48,4 +46,3 @@ pipeline {
         }
     }
 }
-
