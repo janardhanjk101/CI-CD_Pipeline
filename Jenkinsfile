@@ -1,9 +1,8 @@
 pipeline {
-    agent none
+    agent any  // Runs on the available node (built-in Jenkins node)
 
     stages {
         stage('Clone Repository') {
-            agent { label 'master' }
             steps {
                 git branch: 'main', url: 'https://github.com/janardhanjk101/CICKprojectusingvagrant.git'
             }
@@ -20,14 +19,12 @@ pipeline {
         }
 
         stage('Create Docker Image') {
-            agent { label 'master' }
             steps {
                 sh 'docker build -t mynodeapp .'
             }
         }
 
         stage('Push Docker Image to Docker Hub') {
-            agent { label 'master' }
             environment {
                 DOCKER_CREDENTIALS = credentials('dockerhub-credentials')  // Use saved Jenkins credentials
             }
@@ -39,7 +36,6 @@ pipeline {
         }
 
         stage('Deploy to PC 3') {
-            agent { label 'master' }
             steps {
                 ansiblePlaybook playbook: 'deploy.yml'
             }
