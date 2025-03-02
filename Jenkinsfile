@@ -37,10 +37,7 @@ pipeline {
 
         stage('Deploy to PC 3') {
             steps {
-               ansiblePlaybook(
-                    playbook: 'deploy.yml',
-                    inventory: 'hosts.ini'
-                )
+               sh 'ansible-playbook deploy.yml -i hosts.ini'
             }
         }
     }
