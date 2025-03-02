@@ -1,0 +1,12 @@
+- hosts: webserver
+  become: yes
+  tasks:
+    - name: Pull latest Docker image
+      command: docker pull janardhanjk/mynodeapp:latest
+
+    - name: Remove old container
+      command: docker rm -f node_app
+      ignore_errors: yes
+
+    - name: Run new container
+      command: docker run -d --name node_app -p 80:3000 janardhanjk/mynodeapp:latest
